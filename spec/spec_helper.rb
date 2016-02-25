@@ -12,6 +12,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 $redis = Redis::Namespace.new('rollout_ui:test', :redis => Redis.new)
 
 RSpec.configure do |config|
+  config.include Capybara::DSL
   config.before(:each) do
     keys = $redis.keys("*")
     $redis.del(*keys) unless keys.empty?

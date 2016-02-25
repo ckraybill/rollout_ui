@@ -17,7 +17,7 @@
     <label>Groups</label>
     <select id="<%= feature.name %>_groups" class="groups" name="groups[]" multiple="multiple" data-placeholder="Choose a group">
       <% @wrapper.groups.each do |group| %>
-        <option<%= " selected='selected'" if feature.groups.include?(group) %>><%= group %></option>
+        <option<%= " selected='selected'".html_safe if feature.groups.include?(group) %>><%= group %></option>
       <% end %>
     </select>
     <input type="hidden" name="groups[]" value="" />

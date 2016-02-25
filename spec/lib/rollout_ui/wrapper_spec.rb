@@ -8,57 +8,57 @@ describe RolloutUi::Wrapper do
   it "cannot be initialized without an instance of rollout if rollout hasn't been wrapped" do
     RolloutUi.wrap(nil)
 
-    lambda { RolloutUi::Wrapper.new }.should raise_error(RolloutUi::Wrapper::NoRolloutInstance)
+    expect{ RolloutUi::Wrapper.new }.to raise_error(RolloutUi::Wrapper::NoRolloutInstance)
   end
 
   it "can be initialized with an instance of Rollout" do
-    RolloutUi::Wrapper.new($rollout).should be_an_instance_of(RolloutUi::Wrapper)
+    expect(RolloutUi::Wrapper.new($rollout)).to be_an_instance_of(RolloutUi::Wrapper)
   end
 
   it "can be initialized without an instance of rollout if rollout has been wrapped" do
-    RolloutUi::Wrapper.new.should be_an_instance_of(RolloutUi::Wrapper)
+    expect(RolloutUi::Wrapper.new).to be_an_instance_of(RolloutUi::Wrapper)
   end
 
   describe "#groups" do
     it "returns all groups defined for the rollout instance" do
       $rollout.define_group(:beta_testers) { |user| user.beta_tester? }
 
-      @rollout_ui.groups.should == [:all, :beta_testers]
+      expect(@rollout_ui.groups).to match_array([:all, :beta_testers])
     end
 
     it "doesn't return other defined groups" do
       Rollout.new($redis).define_group(:beta_testers) { |user| user.beta_tester? }
 
-      @rollout_ui.groups.should == [:all]
+      expect(@rollout_ui.groups).to eq([:all])
     end
   end
 
   describe "#features" do
     it "returns an empty array if no features have been requested" do
-      @rollout_ui.features.should == []
+      expect(@rollout_ui.features).to eq([])
     end
 
     it "returns all features that have been requested" do
-      $rollout.active?(:featureA, mock(:user, :id => 5))
-      $rollout.active?(:featureB, mock(:user, :id => 6))
+      $rollout.active?(:featureA, double(:user, :id => 5))
+      $rollout.active?(:featureB, double(:user, :id => 6))
 
-      @rollout_ui.features.should == ["featureA", "featureB"]
+      expect(@rollout_ui.features).to match_array(["featureA", "featureB"])
     end
 
     it "lists each feature only once" do
-      $rollout.active?(:featureA, mock(:user, :id => 5))
-      $rollout.active?(:featureA, mock(:user, :id => 6))
+      $rollout.active?(:featureA, double(:user, :id => 5))
+      $rollout.active?(:featureA, double(:user, :id => 6))
 
-      @rollout_ui.features.should == ["featureA"]
+      expect(@rollout_ui.features).to eq(["featureA"])
     end
 
     it "lists features in alphabetical order" do
-      $rollout.active?(:zFeature, mock(:user, :id => 1))
-      $rollout.active?(:featureA, mock(:user, :id => 5))
-      $rollout.active?(:featureB, mock(:user, :id => 6))
-      $rollout.active?(:anotherFeature, mock(:user, :id => 8))
+      $rollout.active?(:zFeature, double(:user, :id => 1))
+      $rollout.active?(:featureA, double(:user, :id => 5))
+      $rollout.active?(:featureB, double(:user, :id => 6))
+      $rollout.active?(:anotherFeature, double(:user, :id => 8))
 
-      @rollout_ui.features.should == %w(anotherFeature featureA featureB zFeature)
+      expect(@rollout_ui.features).to match_array(%w(anotherFeature featureA featureB zFeature))
     end
   end
 
@@ -66,7 +66,7 @@ describe RolloutUi::Wrapper do
     it "adds feature to the list of features" do
       @rollout_ui.add_feature(:featureA)
 
-      @rollout_ui.features.should == ["featureA"]
+      expect(@rollout_ui.features).to eq(["featureA"])
     end
   end
 end

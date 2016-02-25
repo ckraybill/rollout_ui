@@ -5,7 +5,7 @@
     <label>Percentage</label>
     <select class="percentage" name="percentage">
       <% 101.times do |i| %>
-        <option value="<%= i %>"<%= " selected='selected'" if feature.percentage == i.to_s %>><%= i %>%</option>
+        <option value="<%= i %>"<%= " selected='selected'".html_safe if feature.percentage == i.to_s %>><%= i %>%</option>
       <% end %>
     </select>
     <input type="submit" value="Save" />
@@ -17,7 +17,7 @@
     <label>Groups</label>
     <select id="<%= feature.name %>_groups" class="groups" name="groups[]" multiple="multiple" data-placeholder="Choose a group">
       <% @wrapper.groups.each do |group| %>
-        <option<%= " selected='selected'" if feature.groups.include?(group) %>><%= group %></option>
+        <option<%= " selected='selected'".html_safe if feature.groups.include?(group) %>><%= group %></option>
       <% end %>
     </select>
     <%= hidden_field_tag "groups[]", "" %>

@@ -14,11 +14,11 @@ module RolloutUi
     end
 
     def groups
-      rollout.get(feature_for(name)).groups
+      rollout.get(feature_for(name)).groups.to_a
     end
 
     def user_ids
-      rollout.get(feature_for(name)).users
+      rollout.get(feature_for(name)).users.to_a
     end
 
     def percentage=(percentage_val)
